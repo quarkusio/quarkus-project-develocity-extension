@@ -22,5 +22,5 @@ The cache won't be populated otherwise.
 ## Releasing
 
 ```
-mvn release:prepare release:perform -Prelease
+./mvnw release:prepare release:perform -Prelease
 ```
