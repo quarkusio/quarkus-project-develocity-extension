@@ -10,13 +10,15 @@ This Maven extension is designed to configure the build cache for the Quarkus pr
 
 The reference documentation for the API can be found [here](https://docs.gradle.com/enterprise/maven-extension/api/com/gradle/maven/extension/api/cache/MojoMetadataProvider.Context.html).
 
-When caching new goals, the debug output is very useful:
+When working on caching new goals, you can obtain a debug output with the following command:
 
 ```
 ./mvnw -Dquickly -Dorg.slf4j.simpleLogger.log.gradle.goal.cache=debug -Dorg.slf4j.simpleLogger.log.io.quarkus.develocity=debug -e clean install
 ```
 
-Note: the `clean install` is important even if not strictly necessary when using `-Dquickly`.
+This command should be run on a single module on the Quarkus project for easier debugging.
+
+Note: the `clean install` goals are important even if not strictly necessary when using `-Dquickly`.
 The cache won't be populated otherwise.
 
 ## Releasing
