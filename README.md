@@ -1,10 +1,10 @@
-# Quarkus project Develocity extension
+# Maven extension configuring the Develocity build cache configuration for the Quarkus project
 
 [![Version](https://img.shields.io/maven-central/v/io.quarkus.develocity/quarkus-project-develocity-extension?logo=apache-maven&style=for-the-badge)](https://central.sonatype.com/artifact/io.quarkus.develocity/quarkus-project-develocity-extension)
 
 ## About
 
-This Maven extension is designed to configure the build cache for the Quarkus project.
+This Maven extension is designed to configure the Develocity build cache for the Quarkus project.
 
 ## Developing
 
