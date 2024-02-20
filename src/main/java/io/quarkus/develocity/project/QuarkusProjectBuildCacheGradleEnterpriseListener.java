@@ -76,6 +76,10 @@ public class QuarkusProjectBuildCacheGradleEnterpriseListener implements GradleE
             if (Character.isDigit(segment.charAt(0))) {
                 continue;
             }
+            // when using -T C6 which seems to work for some versions of Maven (but not mine)
+            if (segment.length() > 2 && segment.charAt(0) == 'C' && Character.isDigit(segment.charAt(1))) {
+                continue;
+            }
 
             hasGoals = true;
         }
