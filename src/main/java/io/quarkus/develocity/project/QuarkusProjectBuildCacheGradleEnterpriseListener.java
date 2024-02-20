@@ -12,6 +12,7 @@ import com.gradle.maven.extension.api.cache.BuildCacheApi;
 import io.quarkus.develocity.project.goals.EnforcerConfiguredPlugin;
 import io.quarkus.develocity.project.goals.FormatterConfiguredPlugin;
 import io.quarkus.develocity.project.goals.ImpsortConfiguredPlugin;
+import io.quarkus.develocity.project.goals.KotlinConfiguredPlugin;
 import io.quarkus.develocity.project.goals.QuarkusConfiguredPlugin;
 import io.quarkus.develocity.project.goals.SourceConfiguredPlugin;
 
@@ -35,7 +36,8 @@ public class QuarkusProjectBuildCacheGradleEnterpriseListener implements GradleE
                 new QuarkusConfiguredPlugin(),
                 new SourceConfiguredPlugin(),
                 new FormatterConfiguredPlugin(),
-                new ImpsortConfiguredPlugin()
+                new ImpsortConfiguredPlugin(),
+                new KotlinConfiguredPlugin()
                 //new QuarkusExtensionConfiguredPlugin()
         );
 
