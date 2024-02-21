@@ -21,8 +21,16 @@ public class QuarkusConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
     @Override
     protected Map<String, GoalMetadataProvider> getGoalMetadataProviders() {
         return Map.of(
+                "build", QuarkusConfiguredPlugin::configureBuild,
                 "generate-code", QuarkusConfiguredPlugin::configureGenerateCode,
                 "generate-code-tests", QuarkusConfiguredPlugin::configureGenerateCodeTests);
+    }
+
+    private static void configureBuild(MojoMetadataProvider.Context context) {
+        context.inputs(inputs -> {
+            inputs.fileSet("dependency-checksums", context.getProject().getBuild().getDirectory(), fs -> fs
+                    .include("quarkus-*-dependency-checksums.txt").normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));
+        });
     }
 
     private static void configureGenerateCode(MojoMetadataProvider.Context context) {
