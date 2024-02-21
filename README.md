@@ -21,6 +21,8 @@ This command should be run on a single module on the Quarkus project for easier 
 Note: the `clean install` goals are important even if not strictly necessary when using `-Dquickly`.
 The cache won't be populated otherwise.
 
+You can also get some information about the generation of the cache key with `-Dorg.slf4j.simpleLogger.log.gradle.goal.fingerprint=trace`.
+
 ## Releasing
 
 ```
