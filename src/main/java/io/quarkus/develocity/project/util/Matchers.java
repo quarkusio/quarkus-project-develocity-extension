@@ -38,6 +38,10 @@ public final class Matchers {
     }
 
     private static boolean directory(MavenSession session, MavenProject project, Path directory) {
+        if (project == null || project.getBasedir() == null) {
+            return false;
+        }
+
         Path rootProject = session.getRequest().getMultiModuleProjectDirectory().toPath();
         Path currentProject = project.getBasedir().toPath();
 
