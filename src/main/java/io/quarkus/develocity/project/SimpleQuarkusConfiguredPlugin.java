@@ -18,19 +18,6 @@ public abstract class SimpleQuarkusConfiguredPlugin implements ConfiguredPlugin 
 
     @Override
     public void configureBuildCache(GradleEnterpriseApi gradleEnterpriseApi, MavenSession mavenSession) {
-        NormalizationProvider normalizationProvider = getNormalizationProvider();
-
-        if (normalizationProvider != null) {
-            gradleEnterpriseApi.getBuildCache().registerNormalizationProvider(context -> {
-                if (!isBuildCacheEnabled(context.getProject())) {
-                    Log.debug(getPluginName(), "Build cache is disabled.");
-                    return;
-                } else {
-                    Log.debug(getPluginName(), "Build cache is enabled. Configuring normalization provider.");
-                }
-                normalizationProvider.configureNormalization(context);
-            });
-        }
         gradleEnterpriseApi.getBuildCache().registerMojoMetadataProvider(context -> {
             context.withPlugin(getPluginName(), () -> {
                 if (!isBuildCacheEnabled(context.getProject())) {
@@ -56,10 +43,6 @@ public abstract class SimpleQuarkusConfiguredPlugin implements ConfiguredPlugin 
 
     protected boolean isBuildCacheEnabled(MavenProject project) {
         return true;
-    }
-
-    protected NormalizationProvider getNormalizationProvider() {
-        return null;
     }
 
     protected abstract Map<String, GoalMetadataProvider> getGoalMetadataProviders();
