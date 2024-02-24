@@ -14,17 +14,17 @@ import com.gradle.maven.extension.api.GradleEnterpriseListener;
 import com.gradle.maven.extension.api.cache.BuildCacheApi;
 import com.gradle.maven.scan.extension.internal.api.BuildScanApiInternal;
 
-import io.quarkus.develocity.project.goals.CompilerConfiguredPlugin;
-import io.quarkus.develocity.project.goals.EnforcerConfiguredPlugin;
-import io.quarkus.develocity.project.goals.FailsafeConfiguredPlugin;
-import io.quarkus.develocity.project.goals.FormatterConfiguredPlugin;
-import io.quarkus.develocity.project.goals.ImpsortConfiguredPlugin;
-import io.quarkus.develocity.project.goals.KotlinConfiguredPlugin;
-import io.quarkus.develocity.project.goals.QuarkusConfiguredPlugin;
-import io.quarkus.develocity.project.goals.SourceConfiguredPlugin;
-import io.quarkus.develocity.project.goals.SpotlessConfiguredPlugin;
-import io.quarkus.develocity.project.goals.SurefireConfiguredPlugin;
 import io.quarkus.develocity.project.normalization.Normalization;
+import io.quarkus.develocity.project.plugins.CompilerConfiguredPlugin;
+import io.quarkus.develocity.project.plugins.EnforcerConfiguredPlugin;
+import io.quarkus.develocity.project.plugins.FailsafeConfiguredPlugin;
+import io.quarkus.develocity.project.plugins.FormatterConfiguredPlugin;
+import io.quarkus.develocity.project.plugins.ImpsortConfiguredPlugin;
+import io.quarkus.develocity.project.plugins.KotlinConfiguredPlugin;
+import io.quarkus.develocity.project.plugins.QuarkusConfiguredPlugin;
+import io.quarkus.develocity.project.plugins.SourceConfiguredPlugin;
+import io.quarkus.develocity.project.plugins.SpotlessConfiguredPlugin;
+import io.quarkus.develocity.project.plugins.SurefireConfiguredPlugin;
 import io.quarkus.develocity.project.scan.BuildScanMetadata;
 import io.quarkus.develocity.project.scan.MavenVersionChecker;
 
