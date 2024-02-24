@@ -19,8 +19,16 @@ public final class Log {
         LOGGER.error(message);
     }
 
+    public static void error(String message, Throwable e) {
+        LOGGER.error(message, e);
+    }
+
     public static void warn(String message) {
         LOGGER.warn(message);
+    }
+
+    public static void warn(String message, Throwable e) {
+        LOGGER.warn(message, e);
     }
 
     public static void info(String message) {
@@ -39,8 +47,16 @@ public final class Log {
         LOGGER.error("[" + pluginName + "] " + message);
     }
 
+    public static void error(String pluginName, String message, Throwable e) {
+        LOGGER.error("[" + pluginName + "] " + message, e);
+    }
+
     public static void warn(String pluginName, String message) {
         LOGGER.warn("[" + pluginName + "] " + message);
+    }
+
+    public static void warn(String pluginName, String message, Throwable e) {
+        LOGGER.warn("[" + pluginName + "] " + message, e);
     }
 
     public static void info(String pluginName, String message) {

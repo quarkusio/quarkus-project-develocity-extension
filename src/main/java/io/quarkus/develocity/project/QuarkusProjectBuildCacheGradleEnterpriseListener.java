@@ -1,5 +1,8 @@
 package io.quarkus.develocity.project;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -9,6 +12,7 @@ import org.codehaus.plexus.component.annotations.Component;
 import com.gradle.maven.extension.api.GradleEnterpriseApi;
 import com.gradle.maven.extension.api.GradleEnterpriseListener;
 import com.gradle.maven.extension.api.cache.BuildCacheApi;
+import com.gradle.maven.scan.extension.internal.api.BuildScanApiInternal;
 
 import io.quarkus.develocity.project.goals.CompilerConfiguredPlugin;
 import io.quarkus.develocity.project.goals.EnforcerConfiguredPlugin;
@@ -20,7 +24,9 @@ import io.quarkus.develocity.project.goals.QuarkusConfiguredPlugin;
 import io.quarkus.develocity.project.goals.SourceConfiguredPlugin;
 import io.quarkus.develocity.project.goals.SpotlessConfiguredPlugin;
 import io.quarkus.develocity.project.goals.SurefireConfiguredPlugin;
-import io.quarkus.develocity.project.util.Matchers;
+import io.quarkus.develocity.project.normalization.Normalization;
+import io.quarkus.develocity.project.scan.BuildScanMetadata;
+import io.quarkus.develocity.project.scan.MavenVersionChecker;
 
 @SuppressWarnings("deprecation")
 @Component(role = GradleEnterpriseListener.class, hint = "quarkus-project-build-cache", description = "Configures the build cache of the Quarkus project")
@@ -29,60 +35,48 @@ public class QuarkusProjectBuildCacheGradleEnterpriseListener implements GradleE
     private static final String QUICKLY = "-Dquickly";
     private static final String DASH = "-";
 
+    private static final List<String> NESTED_PROJECTS_PATHS = List.of(
+            File.separator + "target" + File.separator + "codestart-test" + File.separator,
+            File.separator + "target" + File.separator + "it" + File.separator,
+            File.separator + "target" + File.separator + "test-classes" + File.separator,
+            File.separator + "target" + File.separator + "test-project" + File.separator);
+
     @Override
     public void configure(GradleEnterpriseApi gradleEnterpriseApi, MavenSession mavenSession) throws Exception {
+        if (ignoreProject(mavenSession)) {
+            // do not publish a build scan for test builds
+            Log.debug("Disabling build scan publication and build cache for nested project: "
+                    + mavenSession.getRequest().getBaseDirectory());
+
+            gradleEnterpriseApi.getBuildScan().publishAlwaysIf(false);
+            gradleEnterpriseApi.getBuildScan().publishOnFailureIf(false);
+            gradleEnterpriseApi.getBuildCache().getLocal().setEnabled(false);
+            gradleEnterpriseApi.getBuildCache().getLocal().setStoreEnabled(false);
+            gradleEnterpriseApi.getBuildCache().getRemote().setEnabled(false);
+            gradleEnterpriseApi.getBuildCache().getRemote().setStoreEnabled(false);
+
+            if (System.getenv("GITHUB_ACTIONS") != null) {
+                try {
+                    Path storageLocationTmpDir = Files.createTempDirectory(Path.of(System.getenv("RUNNER_TEMP")),
+                            "buildScanTmp");
+                    Log.debug("Update storage location to " + storageLocationTmpDir);
+                    gradleEnterpriseApi.setStorageDirectory(storageLocationTmpDir);
+                } catch (IOException e) {
+                    Log.error("Temporary storage location directory cannot be created, the Build Scan will be published", e);
+                }
+            }
+
+            return;
+        }
+
+        gradleEnterpriseApi.getBuildScan().publishAlways();
+        ((BuildScanApiInternal) gradleEnterpriseApi.getBuildScan()).publishIfAuthenticated();
+        BuildScanMetadata.addMetadataToBuildScan(gradleEnterpriseApi.getBuildScan());
+        MavenVersionChecker.checkRuntimeMavenVersion(gradleEnterpriseApi.getBuildScan(), mavenSession);
+
         workaroundQuickly(gradleEnterpriseApi.getBuildCache());
 
-        // System properties
-        gradleEnterpriseApi.getBuildCache().registerNormalizationProvider(
-                context -> context.configureSystemPropertiesNormalization(s -> {
-                    s.addIgnoredKeys("maven.repo.local", "maven.settings");
-
-                    if (Matchers.directory(context, Path.of("docs"))) {
-                        s.addIgnoredKeys("vale.dir", "git.dir");
-                    }
-
-                    if (Matchers.directory(context, Path.of("independent-projects", "arc", "tcks", "cdi-tck-runner"))) {
-                        s.addIgnoredKeys("org.jboss.cdi.tck.libraryDirectory");
-                    }
-
-                    if (Matchers.directory(context, Path.of("integration-tests"))) {
-                        s.addIgnoredKeys("native.image.path", "quarkus.kubernetes-service-binding.root");
-                    }
-
-                    if (Matchers.module(context, "quarkus-integration-test-rest-client")) {
-                        s.addIgnoredKeys("javax.net.ssl.trustStore", "rest-client.trustStore");
-                    }
-
-                    if (Matchers.module(context, "quarkus-integration-test-test-extension")) {
-                        s.addIgnoredKeys("classpathEntriesRecordingFile");
-                    }
-                }));
-
-        // Application.properties
-        gradleEnterpriseApi.getBuildCache().registerNormalizationProvider(
-                context -> context.configureRuntimeClasspathNormalization(c -> {
-                    c.addIgnoredFiles("META-INF/ide-deps/**");
-
-                    if (Matchers.module(context, "quarkus-integration-test-rest-client-reactive")) {
-                        c.addPropertiesNormalization("application.properties", "quarkus.rest-client.self-signed.trust-store",
-                                "quarkus.rest-client.wrong-host.trust-store",
-                                "quarkus.rest-client.wrong-host-rejected.trust-store");
-                    }
-
-                    if (Matchers.module(context, "quarkus-integration-test-oidc-client-reactive")) {
-                        c.addPropertiesNormalization("application.properties", "quarkus.keycloak.devservices.realm-path");
-                    }
-
-                    if (Matchers.module(context, "quarkus-integration-test-test-extension")) {
-                        c.addPropertiesNormalization("application.properties", "quarkus.bt.classpath-recording.record-file",
-                                "%test.quarkus.bt.classpath-recording.record-file");
-                    }
-
-                    if (Matchers.module(context, "quarkus-integration-test-gradle-plugin")) {
-                        c.addIgnoredFiles(".quarkus/config.yml");
-                    }
-                }));
+        Normalization.configureNormalization(gradleEnterpriseApi.getBuildCache());
 
         List<ConfiguredPlugin> configuredGoals = List.of(
                 new CompilerConfiguredPlugin(),
@@ -144,5 +138,19 @@ public class QuarkusProjectBuildCacheGradleEnterpriseListener implements GradleE
         if (hasQuickly && !hasGoals) {
             buildCacheApi.setRequireClean(false);
         }
+    }
+
+    private static boolean ignoreProject(MavenSession mavenSession) {
+        if (mavenSession == null || mavenSession.getRequest() == null || mavenSession.getRequest().getBaseDirectory() == null) {
+            return false;
+        }
+
+        for (String nestedProjectsPath : NESTED_PROJECTS_PATHS) {
+            if (mavenSession.getRequest().getBaseDirectory().contains(nestedProjectsPath)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
