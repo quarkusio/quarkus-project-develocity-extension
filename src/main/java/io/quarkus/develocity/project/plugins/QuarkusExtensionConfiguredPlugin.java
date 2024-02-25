@@ -1,4 +1,4 @@
-package io.quarkus.develocity.project.goals;
+package io.quarkus.develocity.project.plugins;
 
 import java.util.Map;
 
