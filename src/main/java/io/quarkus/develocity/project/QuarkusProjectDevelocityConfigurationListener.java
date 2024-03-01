@@ -51,9 +51,7 @@ public class QuarkusProjectDevelocityConfigurationListener implements GradleEnte
             gradleEnterpriseApi.getBuildScan().publishAlwaysIf(false);
             gradleEnterpriseApi.getBuildScan().publishOnFailureIf(false);
             gradleEnterpriseApi.getBuildCache().getLocal().setEnabled(false);
-            gradleEnterpriseApi.getBuildCache().getLocal().setStoreEnabled(false);
             gradleEnterpriseApi.getBuildCache().getRemote().setEnabled(false);
-            gradleEnterpriseApi.getBuildCache().getRemote().setStoreEnabled(false);
 
             if (System.getenv("GITHUB_ACTIONS") != null) {
                 try {
