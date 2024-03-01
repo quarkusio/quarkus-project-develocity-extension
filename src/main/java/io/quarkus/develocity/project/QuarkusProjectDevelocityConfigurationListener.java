@@ -29,8 +29,8 @@ import io.quarkus.develocity.project.scan.BuildScanMetadata;
 import io.quarkus.develocity.project.scan.MavenVersionChecker;
 
 @SuppressWarnings("deprecation")
-@Component(role = GradleEnterpriseListener.class, hint = "quarkus-project-build-cache", description = "Configures the build cache of the Quarkus project")
-public class QuarkusProjectBuildCacheGradleEnterpriseListener implements GradleEnterpriseListener {
+@Component(role = GradleEnterpriseListener.class, hint = "quarkus-project-build-cache", description = "Configures Develocity for the Quarkus project")
+public class QuarkusProjectDevelocityConfigurationListener implements GradleEnterpriseListener {
 
     private static final String QUICKLY = "-Dquickly";
     private static final String DASH = "-";
