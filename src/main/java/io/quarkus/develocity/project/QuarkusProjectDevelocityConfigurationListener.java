@@ -81,7 +81,7 @@ public class QuarkusProjectDevelocityConfigurationListener implements GradleEnte
                 new SurefireConfiguredPlugin(),
                 new FailsafeConfiguredPlugin(),
                 new EnforcerConfiguredPlugin(),
-                new SourceConfiguredPlugin(),
+                //new SourceConfiguredPlugin(),
                 new QuarkusConfiguredPlugin(),
                 new FormatterConfiguredPlugin(),
                 new ImpsortConfiguredPlugin(),

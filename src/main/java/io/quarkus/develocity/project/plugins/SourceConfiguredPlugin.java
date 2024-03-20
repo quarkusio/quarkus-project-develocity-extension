@@ -46,5 +46,7 @@ public class SourceConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
             outputs.file("source-jar", context.getProject().getBuild().getDirectory() + "/"
                     + context.getProject().getBuild().getFinalName() + "-sources.jar");
         });
+
+        // we should add the source jar as an attached artifact but for now, we can't
     }
 }
