@@ -78,6 +78,10 @@ public final class BuildScanMetadata {
 
                 buildScanApi.link("Pull request",
                         System.getenv("GITHUB_SERVER_URL") + "/" + System.getenv("GITHUB_REPOSITORY") + "/pull/" + prNumber);
+
+                if (!isBlank(System.getenv("GITHUB_BASE_REF"))) {
+                    buildScanApi.tag(System.getenv("GITHUB_BASE_REF"));
+                }
             }
 
             similarBuildsTags.add(System.getenv("RUNNER_OS"));
