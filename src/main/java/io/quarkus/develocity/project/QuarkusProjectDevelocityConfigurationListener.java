@@ -47,7 +47,7 @@ public class QuarkusProjectDevelocityConfigurationListener implements Develocity
             Log.debug("Disabling build scan publication and build cache for nested project: "
                     + mavenSession.getRequest().getBaseDirectory());
 
-            develocityApi.getBuildScan().getPublishing().onlyIf(context -> !context.getBuildResult().getFailures().isEmpty());
+            develocityApi.getBuildScan().getPublishing().onlyIf(context -> false);
             develocityApi.getBuildCache().getLocal().setEnabled(false);
             develocityApi.getBuildCache().getRemote().setEnabled(false);
 
