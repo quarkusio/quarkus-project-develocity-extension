@@ -9,16 +9,15 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 
-import com.gradle.maven.extension.api.GradleEnterpriseApi;
-import com.gradle.maven.extension.api.cache.MojoMetadataProvider;
-import com.gradle.maven.extension.api.cache.NormalizationProvider;
-
+import com.gradle.develocity.agent.maven.api.DevelocityApi;
+import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider;
+import com.gradle.develocity.agent.maven.api.cache.NormalizationProvider;
 
 public abstract class SimpleQuarkusConfiguredPlugin implements ConfiguredPlugin {
 
     @Override
-    public void configureBuildCache(GradleEnterpriseApi gradleEnterpriseApi, MavenSession mavenSession) {
-        gradleEnterpriseApi.getBuildCache().registerMojoMetadataProvider(context -> {
+    public void configureBuildCache(DevelocityApi develocityApi, MavenSession mavenSession) {
+        develocityApi.getBuildCache().registerMojoMetadataProvider(context -> {
             context.withPlugin(getPluginName(), () -> {
                 if (!isBuildCacheEnabled(context.getProject())) {
                     Log.debug(getPluginName(), "Build cache is disabled.");

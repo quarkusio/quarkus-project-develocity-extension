@@ -12,7 +12,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gradle.maven.extension.api.scan.BuildScanApi;
+import com.gradle.develocity.agent.maven.api.scan.BuildScanApi;
 
 import io.quarkus.develocity.project.Log;
 

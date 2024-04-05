@@ -2,7 +2,7 @@ package io.quarkus.develocity.project.normalization;
 
 import java.nio.file.Path;
 
-import com.gradle.maven.extension.api.cache.BuildCacheApi;
+import com.gradle.develocity.agent.maven.api.cache.BuildCacheApi;
 
 import io.quarkus.develocity.project.util.Matchers;
 

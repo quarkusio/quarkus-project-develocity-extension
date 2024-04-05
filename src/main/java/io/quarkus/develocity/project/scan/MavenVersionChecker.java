@@ -13,7 +13,7 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.rtinfo.RuntimeInformation;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
-import com.gradle.maven.extension.api.scan.BuildScanApi;
+import com.gradle.develocity.agent.maven.api.scan.BuildScanApi;
 
 import io.quarkus.develocity.project.Log;
 

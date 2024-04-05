@@ -3,7 +3,7 @@ package io.quarkus.develocity.project.plugins;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.gradle.maven.extension.api.cache.MojoMetadataProvider;
+import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider;
 
 import io.quarkus.develocity.project.SimpleQuarkusConfiguredPlugin;
 
