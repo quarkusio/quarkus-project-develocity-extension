@@ -95,6 +95,12 @@ public class QuarkusProjectDevelocityConfigurationListener implements Develocity
     private static void workaroundQuickly(BuildCacheApi buildCacheApi) {
         String mavenCommandLine = System.getenv("MAVEN_CMD_LINE_ARGS");
         if (mavenCommandLine == null || mavenCommandLine.isBlank()) {
+            // let's check if we are using mvnd
+            if (System.getProperty("mvnd.home") != null && "true".equals(System.getProperty("quickly"))) {
+                // unfortunately, with mvnd, we have no way to inspect the Maven command line so this will have to do
+                buildCacheApi.setRequireClean(false);
+            }
+
             return;
         }
 
