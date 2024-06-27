@@ -24,7 +24,10 @@ public class FailsafeConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
 
     private static void configureIntegrationTest(MojoMetadataProvider.Context context) {
         context.inputs(inputs -> {
-            inputs.fileSet("dependency-checksums", context.getProject().getBuild().getDirectory(), fs -> fs
+            inputs.fileSet("quarkus-dependencies", context.getProject().getBuild().getDirectory(), fs -> fs
+                    .include("quarkus-*-dependencies.txt").normalizationStrategy(NormalizationStrategy.CLASSPATH));
+            // for compatibility with older versions but this is deprecated
+            inputs.fileSet("quarkus-dependency-checksums", context.getProject().getBuild().getDirectory(), fs -> fs
                     .include("quarkus-*-dependency-checksums.txt").normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));
 
             if (Matchers.directory(context, Path.of("integration-tests"))) {
