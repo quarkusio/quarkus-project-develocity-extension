@@ -28,9 +28,12 @@ public class QuarkusConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
 
     private static void configureBuild(MojoMetadataProvider.Context context) {
         context.inputs(inputs -> {
-            inputs.fileSet("dependency-checksums", context.getProject().getBuild().getDirectory(), fs -> fs
+            inputs.fileSet("quarkus-dependencies", context.getProject().getBuild().getDirectory(), fs -> fs
+                    .include("quarkus-*-dependencies.txt").normalizationStrategy(NormalizationStrategy.CLASSPATH));
+            // for compatibility with older versions but this is deprecated
+            inputs.fileSet("quarkus-dependency-checksums", context.getProject().getBuild().getDirectory(), fs -> fs
                     .include("quarkus-*-dependency-checksums.txt").normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));
-        });
+            });
     }
 
     private static void configureGenerateCode(MojoMetadataProvider.Context context) {
@@ -48,7 +51,10 @@ public class QuarkusConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
             dependsOnJavaVersion(inputs);
 
             inputs.properties("skipSourceGeneration", "mode", "properties", "bootstrapId");
-            inputs.fileSet("dependency-checksums", context.getProject().getBuild().getDirectory(), fileSet -> fileSet
+            inputs.fileSet("quarkus-dependencies", context.getProject().getBuild().getDirectory(), fs -> fs
+                    .include("quarkus-*-dependencies.txt").normalizationStrategy(NormalizationStrategy.CLASSPATH));
+            // for compatibility with older versions but this is deprecated
+            inputs.fileSet("quarkus-dependency-checksums", context.getProject().getBuild().getDirectory(), fs -> fs
                     .include("quarkus-*-dependency-checksums.txt").normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));
             inputs.fileSet("resources", context.getProject().getResources().stream().map(r -> r.getDirectory())
                     .collect(Collectors.toList()),
