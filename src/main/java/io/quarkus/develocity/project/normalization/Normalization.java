@@ -41,6 +41,13 @@ public final class Normalization {
         // Application.properties
         buildCacheApi.registerNormalizationProvider(
                 context -> context.configureRuntimeClasspathNormalization(c -> {
+                    // we are sharing files between JDKs so we need to ignore content that is version-dependent
+                    // the most important element here is Build-Jdk-Spec, the rest is here to allow reusing caches across branches
+                    // or when the maven-jar-plugin is updated
+                    // see https://docs.gradle.com/develocity/maven-extension/current/#normalizing_contents_of_meta_inf
+                    c.configureMetaInf(metaInf -> metaInf.setIgnoredAttributes("Build-Jdk-Spec", "Created-By",
+                            "Specification-Version", "Implementation-Version"));
+
                     c.addIgnoredFiles("META-INF/ide-deps/**");
 
                     if (Matchers.module(context, "quarkus-integration-test-rest-client-reactive")) {
