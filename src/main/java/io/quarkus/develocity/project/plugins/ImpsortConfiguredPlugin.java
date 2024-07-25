@@ -27,7 +27,7 @@ public class ImpsortConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
 
             inputs.properties("sourceEncoding", "skip", "staticGroups", "groups", "staticAfter", "joinStaticWithNonStatic",
                     "includes", "excludes", "removeUnused", "treatSamePackageAsUnused", "breadthFirstComparator",
-                    "lineEnding", "compliance");
+                    "lineEnding", "compliance", "ignoreParseErrorsBelowImports");
 
             inputs.fileSet("sourceDirectory", fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH)
                     .emptyDirectoryHandling(EmptyDirectoryHandling.IGNORE));
