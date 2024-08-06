@@ -11,7 +11,6 @@ import org.apache.maven.project.MavenProject;
 
 import com.gradle.develocity.agent.maven.api.DevelocityApi;
 import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider;
-import com.gradle.develocity.agent.maven.api.cache.NormalizationProvider;
 
 public abstract class SimpleQuarkusConfiguredPlugin implements ConfiguredPlugin {
 
@@ -31,7 +30,7 @@ public abstract class SimpleQuarkusConfiguredPlugin implements ConfiguredPlugin 
 
                 for (Entry<String, GoalMetadataProvider> goalMetadataProviderEntry : goalMetadataProviders.entrySet()) {
                     if (goalMetadataProviderEntry.getKey().equalsIgnoreCase(context.getMojoExecution().getGoal())) {
-                        goalMetadataProviderEntry.getValue().configure(context);
+                        goalMetadataProviderEntry.getValue().configure(new GoalMetadataProvider.Context(develocityApi.getBuildScan(), context));
                     }
                 }
             });
@@ -68,17 +67,5 @@ public abstract class SimpleQuarkusConfiguredPlugin implements ConfiguredPlugin 
         } catch (DependencyResolutionRequiredException e) {
             throw new IllegalStateException("Classpath can't be resolved");
         }
-    }
-
-    @FunctionalInterface
-    public interface PluginNormalizationProvider {
-
-        void configure(NormalizationProvider.Context context);
-    }
-
-    @FunctionalInterface
-    public interface GoalMetadataProvider {
-
-        void configure(MojoMetadataProvider.Context context);
     }
 }

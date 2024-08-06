@@ -2,10 +2,10 @@ package io.quarkus.develocity.project.plugins;
 
 import java.util.Map;
 
-import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider;
 import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider.Context.FileSet.EmptyDirectoryHandling;
 import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider.Context.FileSet.LineEndingHandling;
 
+import io.quarkus.develocity.project.GoalMetadataProvider;
 import io.quarkus.develocity.project.SimpleQuarkusConfiguredPlugin;
 
 public class SpotlessConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
@@ -21,9 +21,9 @@ public class SpotlessConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                 "apply", SpotlessConfiguredPlugin::configureApply);
     }
 
-    private static void configureApply(MojoMetadataProvider.Context context) {
-        context.inputs(inputs -> {
-            dependsOnGav(inputs, context);
+    private static void configureApply(GoalMetadataProvider.Context context) {
+        context.metadata().inputs(inputs -> {
+            dependsOnGav(inputs, context.metadata());
 
             inputs.properties("applySkip", "encoding", "checkSkip", "filePatterns", "formats", "goal",
                     "setLicenseHeaderYearsFromGitHistory", "skip", "ratchetFrom");
@@ -42,11 +42,11 @@ public class SpotlessConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                     "typescript", "yaml", "pom", "markdown");
         });
 
-        context.nested("licenseHeader",
+        context.metadata().nested("licenseHeader",
                 c -> c.inputs(inputs -> inputs.properties("file", "content", "delimiter", "skipLinesMatching")));
-        context.nested("upToDateChecking", c -> c.inputs(inputs -> inputs.properties("enabled", "indexFile")));
+        context.metadata().nested("upToDateChecking", c -> c.inputs(inputs -> inputs.properties("enabled", "indexFile")));
 
-        context.outputs(outputs -> {
+        context.metadata().outputs(outputs -> {
             outputs.cacheable("If the inputs are identical, we should have the same output");
 
             outputs.directory("buildDir");
