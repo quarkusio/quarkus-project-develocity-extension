@@ -3,8 +3,7 @@ package io.quarkus.develocity.project.plugins;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider;
-
+import io.quarkus.develocity.project.GoalMetadataProvider;
 import io.quarkus.develocity.project.SimpleQuarkusConfiguredPlugin;
 
 public class EnforcerConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
@@ -20,15 +19,15 @@ public class EnforcerConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                 "enforce", EnforcerConfiguredPlugin::configureEnforce);
     }
 
-    private static void configureEnforce(MojoMetadataProvider.Context context) {
-        context.inputs(inputs -> {
-            dependsOnGav(inputs, context);
+    private static void configureEnforce(GoalMetadataProvider.Context context) {
+        context.metadata().inputs(inputs -> {
+            dependsOnGav(inputs, context.metadata());
             inputs.properties("skip", "fail", "failFast", "failIfNoRules", "rules", "rulesToExecute", "rulesToSkip",
                     "ignoreCache");
             dependsOnOs(inputs);
             dependsOnJavaVersion(inputs);
 
-            String dependencies = context.getProject().getArtifacts().stream()
+            String dependencies = context.project().getArtifacts().stream()
                     .map(a -> a.getGroupId() + ":" + a.getArtifactId() + ":" + a.getVersion() + ":" + a.getClassifier())
                     .sorted()
                     .collect(Collectors.joining("\n"));
@@ -38,7 +37,7 @@ public class EnforcerConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
             inputs.ignore("project", "mojoExecution", "session");
         });
 
-        context.outputs(outputs -> {
+        context.metadata().outputs(outputs -> {
             outputs.cacheable("If the inputs and dependencies are identical, we should have the same output");
         });
     }

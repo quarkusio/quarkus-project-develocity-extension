@@ -3,9 +3,9 @@ package io.quarkus.develocity.project.plugins;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider;
 import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider.Context.FileSet.NormalizationStrategy;
 
+import io.quarkus.develocity.project.GoalMetadataProvider;
 import io.quarkus.develocity.project.SimpleQuarkusConfiguredPlugin;
 
 /**
@@ -24,27 +24,27 @@ public class SourceConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                 "jar-no-fork", SourceConfiguredPlugin::jarNoFork);
     }
 
-    private static void jarNoFork(MojoMetadataProvider.Context context) {
-        context.inputs(inputs -> {
-            dependsOnGav(inputs, context);
+    private static void jarNoFork(GoalMetadataProvider.Context context) {
+        context.metadata().inputs(inputs -> {
+            dependsOnGav(inputs, context.metadata());
 
             inputs.properties("classifier", "includes", "excludes", "useDefaultExcludes",
                     "useDefaultManifestFile", "attach", "excludeResources", "includePom", "finalName", "forceCreation",
                     "skipSource", "outputTimestamp");
             inputs.fileSet("defaultManifestFile", fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));
-            inputs.fileSet("resources", context.getProject().getResources().stream().map(r -> r.getDirectory())
+            inputs.fileSet("resources", context.project().getResources().stream().map(r -> r.getDirectory())
                     .collect(Collectors.toList()),
                     fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));
-            inputs.fileSet("sources", context.getProject().getCompileSourceRoots(),
+            inputs.fileSet("sources", context.project().getCompileSourceRoots(),
                     fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));
 
             inputs.ignore("project", "jarArchiver", "archive", "outputDirectory", "reactorProjects", "session");
         });
 
-        context.outputs(outputs -> {
+        context.metadata().outputs(outputs -> {
             outputs.cacheable("If the inputs are identical, we should have the same output");
-            outputs.file("source-jar", context.getProject().getBuild().getDirectory() + "/"
-                    + context.getProject().getBuild().getFinalName() + "-sources.jar");
+            outputs.file("source-jar", context.project().getBuild().getDirectory() + "/"
+                    + context.project().getBuild().getFinalName() + "-sources.jar");
         });
 
         // we should add the source jar as an attached artifact but for now, we can't

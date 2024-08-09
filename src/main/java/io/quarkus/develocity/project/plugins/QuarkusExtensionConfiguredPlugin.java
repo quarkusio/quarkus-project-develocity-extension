@@ -2,9 +2,9 @@ package io.quarkus.develocity.project.plugins;
 
 import java.util.Map;
 
-import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider;
 import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider.Context.FileSet.NormalizationStrategy;
 
+import io.quarkus.develocity.project.GoalMetadataProvider;
 import io.quarkus.develocity.project.SimpleQuarkusConfiguredPlugin;
 
 /**
@@ -26,34 +26,32 @@ public class QuarkusExtensionConfiguredPlugin extends SimpleQuarkusConfiguredPlu
                 "extension-descriptor", QuarkusExtensionConfiguredPlugin::configureExtensionDescriptor);
     }
 
-    private static void configureExtensionDescriptor(MojoMetadataProvider.Context context) {
-        if ("false".equals(context.getProject().getProperties().getProperty("skipExtensionValidation", "false"))
-                || "false".equals(context.getProject().getProperties().getProperty("skipCodestartValidation", "false"))) {
-            return;
-        }
-
-        context.inputs(inputs -> {
-            dependsOnGav(inputs, context);
+    private static void configureExtensionDescriptor(GoalMetadataProvider.Context context) {
+        context.metadata().inputs(inputs -> {
+            dependsOnGav(inputs, context.metadata());
             inputs.properties("deployment", "excludedArtifacts",
                     "parentFirstArtifacts", "runnerParentFirstArtifacts", "lesserPriorityArtifacts", "skipExtensionValidation",
                     "ignoreNotDetectedQuarkusCoreVersion", "conditionalDependencies", "dependencyCondition", "skipCodestartValidation",
                     "minimumJavaVersion");
             inputs.fileSet("extensionFile", fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));
 
+            inputs.property("skipExtensionValidation", context.properties().getBoolean("skipExtensionValidation"));
+            inputs.property("skipCodestartValidation", context.properties().getBoolean("skipCodestartValidation"));
+
             inputs.ignore("session", "repoSession", "outputDirectory", "project");
         });
 
-        context.nested("repos", c -> c.inputs(inputs -> inputs.properties("id", "url")));
-        context.nested("removedResources", c -> c.inputs(inputs -> inputs.properties("key", "resources")));
-        context.nested("capabilities", c -> {
+        context.metadata().nested("repos", c -> c.inputs(inputs -> inputs.properties("id", "url")));
+        context.metadata().nested("removedResources", c -> c.inputs(inputs -> inputs.properties("key", "resources")));
+        context.metadata().nested("capabilities", c -> {
             c.nested("requires", cc -> cc.inputs(inputs -> inputs.properties("name", "onlyIf", "onlyIfNot")));
             c.nested("provides", cc -> cc.inputs(inputs -> inputs.properties("name", "onlyIf", "onlyIfNot")));
         });
 
-        context.outputs(outputs -> {
+        context.metadata().outputs(outputs -> {
             outputs.cacheable("If the inputs and dependencies are identical, we should have the same output");
-            outputs.file("quarkus-extension.yaml", context.getProject().getBuild().getOutputDirectory() + "/META-INF/quarkus-extension.yaml");
-            outputs.file("quarkus-extension.properties", context.getProject().getBuild().getOutputDirectory() + "/META-INF/quarkus-extension.properties");
+            outputs.file("quarkus-extension.yaml", context.project().getBuild().getOutputDirectory() + "/META-INF/quarkus-extension.yaml");
+            outputs.file("quarkus-extension.properties", context.project().getBuild().getOutputDirectory() + "/META-INF/quarkus-extension.properties");
         });
     }
 }

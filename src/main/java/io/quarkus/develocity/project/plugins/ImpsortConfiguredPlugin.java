@@ -2,10 +2,10 @@ package io.quarkus.develocity.project.plugins;
 
 import java.util.Map;
 
-import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider;
 import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider.Context.FileSet.EmptyDirectoryHandling;
 import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider.Context.FileSet.NormalizationStrategy;
 
+import io.quarkus.develocity.project.GoalMetadataProvider;
 import io.quarkus.develocity.project.SimpleQuarkusConfiguredPlugin;
 
 public class ImpsortConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
@@ -21,9 +21,9 @@ public class ImpsortConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                 "sort", ImpsortConfiguredPlugin::configureSort);
     }
 
-    private static void configureSort(MojoMetadataProvider.Context context) {
-        context.inputs(inputs -> {
-            dependsOnGav(inputs, context);
+    private static void configureSort(GoalMetadataProvider.Context context) {
+        context.metadata().inputs(inputs -> {
+            dependsOnGav(inputs, context.metadata());
 
             inputs.properties("sourceEncoding", "skip", "staticGroups", "groups", "staticAfter", "joinStaticWithNonStatic",
                     "includes", "excludes", "removeUnused", "treatSamePackageAsUnused", "breadthFirstComparator",
@@ -41,7 +41,7 @@ public class ImpsortConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                     "cachedir");
         });
 
-        context.outputs(outputs -> {
+        context.metadata().outputs(outputs -> {
             outputs.cacheable("If the inputs and dependencies are identical, we should have the same output");
 
             // For now we don't want to output the cachedir as it contains absolute paths
