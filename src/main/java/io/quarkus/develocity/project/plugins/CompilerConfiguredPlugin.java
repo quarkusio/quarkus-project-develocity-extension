@@ -37,7 +37,8 @@ public class CompilerConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                 Matchers.directory(context.metadata(), Path.of("core", "deployment"))) {
 
             context.metadata().inputs(inputs -> {
-                boolean skipDocs = context.properties().getBoolean("skipDocs") || context.properties().getBoolean("quickly");
+                boolean skipDocs = context.properties().getBoolean("skipDocs") || context.properties().getBoolean("quickly")
+                        || context.properties().getBoolean("quickly-ci");
                 inputs.property("skipDocs", skipDocs);
             });
         }
