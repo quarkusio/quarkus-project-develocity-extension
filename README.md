@@ -13,7 +13,7 @@ The reference documentation for the API can be found [here](https://docs.gradle.
 When working on caching new goals, you can obtain a debug output with the following command:
 
 ```
-./mvnw -Dquickly -Dorg.slf4j.simpleLogger.log.gradle.goal.cache=debug -Dorg.slf4j.simpleLogger.log.io.quarkus.develocity=debug -e clean install
+./mvnw -Dquickly -Dorg.slf4j.simpleLogger.log.develocity.goal.cache=debug -Dorg.slf4j.simpleLogger.log.io.quarkus.develocity=debug -e clean install
 ```
 
 This command should be run on a single module on the Quarkus project for easier debugging.
@@ -21,7 +21,7 @@ This command should be run on a single module on the Quarkus project for easier 
 Note: the `clean install` goals are important even if not strictly necessary when using `-Dquickly`.
 The cache won't be populated otherwise.
 
-You can also get some information about the generation of the cache key with `-Dorg.slf4j.simpleLogger.log.gradle.goal.fingerprint=trace`.
+You can also get some information about the generation of the cache key with `-Dorg.slf4j.simpleLogger.log.develocity.goal.fingerprint=trace`.
 
 ## Releasing
 
