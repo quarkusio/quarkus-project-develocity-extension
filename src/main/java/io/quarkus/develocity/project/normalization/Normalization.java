@@ -46,7 +46,7 @@ public final class Normalization {
                     // or when the maven-jar-plugin is updated
                     // see https://docs.gradle.com/develocity/maven-extension/current/#normalizing_contents_of_meta_inf
                     c.configureMetaInf(metaInf -> metaInf.setIgnoredAttributes("Build-Jdk-Spec", "Created-By",
-                            "Specification-Version", "Implementation-Version"));
+                            "Specification-Version", "Implementation-Version", "Scm-Revision"));
 
                     c.addIgnoredFiles("META-INF/ide-deps/**");
 
