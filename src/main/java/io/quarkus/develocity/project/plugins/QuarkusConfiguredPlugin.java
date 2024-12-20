@@ -92,6 +92,7 @@ public class QuarkusConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
             } else {
                 outputs.directory("generated-sources", context.project().getBuild().getDirectory() + "/generated-sources");
             }
+            outputs.directory("proto", context.project().getBuild().getDirectory() + "/proto");
         });
 
         // we should create these only if we have an output cached but let's create them always...
