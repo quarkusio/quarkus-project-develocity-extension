@@ -1,5 +1,6 @@
 package io.quarkus.develocity.project.plugins;
 
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,8 +29,7 @@ public class QuarkusConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
 
     private static void configureBuild(GoalMetadataProvider.Context context) {
         context.metadata().inputs(inputs -> {
-            inputs.fileSet("quarkus-dependencies", context.project().getBuild().getDirectory(), fs -> fs
-                    .include("quarkus-*-dependencies.txt").normalizationStrategy(NormalizationStrategy.CLASSPATH));
+            addClasspathInput(inputs, Path.of(context.project().getBuild().getDirectory(), "quarkus-prod-dependencies.txt"));
             // for compatibility with older versions but this is deprecated
             inputs.fileSet("quarkus-dependency-checksums", context.project().getBuild().getDirectory(), fs -> fs
                     .include("quarkus-*-dependency-checksums.txt").normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));
@@ -51,8 +51,7 @@ public class QuarkusConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
             dependsOnJavaVersion(inputs);
 
             inputs.properties("skipSourceGeneration", "mode", "properties", "bootstrapId");
-            inputs.fileSet("quarkus-dependencies", context.project().getBuild().getDirectory(), fs -> fs
-                    .include("quarkus-*-dependencies.txt").normalizationStrategy(NormalizationStrategy.CLASSPATH));
+            addClasspathInput(inputs, Path.of(context.project().getBuild().getDirectory(), "quarkus-prod-dependencies.txt"));
             // for compatibility with older versions but this is deprecated
             inputs.fileSet("quarkus-dependency-checksums", context.project().getBuild().getDirectory(), fs -> fs
                     .include("quarkus-*-dependency-checksums.txt").normalizationStrategy(NormalizationStrategy.RELATIVE_PATH));

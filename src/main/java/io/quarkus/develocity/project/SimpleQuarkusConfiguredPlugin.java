@@ -1,5 +1,9 @@
 package io.quarkus.develocity.project;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +15,7 @@ import org.apache.maven.project.MavenProject;
 
 import com.gradle.develocity.agent.maven.api.DevelocityApi;
 import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider;
+import com.gradle.develocity.agent.maven.api.cache.MojoMetadataProvider.Context.FileSet.NormalizationStrategy;
 
 public abstract class SimpleQuarkusConfiguredPlugin implements ConfiguredPlugin {
 
@@ -60,12 +65,25 @@ public abstract class SimpleQuarkusConfiguredPlugin implements ConfiguredPlugin 
         inputs.property("_internal_javaVersion", System.getProperty("java.version"));
     }
 
-    protected void addClasspathInput(MojoMetadataProvider.Context context, MojoMetadataProvider.Context.Inputs inputs) {
+    protected static void addClasspathInput(MojoMetadataProvider.Context context, MojoMetadataProvider.Context.Inputs inputs) {
         try {
             List<String> compileClasspathElements = context.getProject().getCompileClasspathElements();
             inputs.fileSet("quarkusCompileClasspath", compileClasspathElements, fileSet -> fileSet.normalizationStrategy(MojoMetadataProvider.Context.FileSet.NormalizationStrategy.CLASSPATH));
         } catch (DependencyResolutionRequiredException e) {
             throw new IllegalStateException("Classpath can't be resolved");
+        }
+    }
+
+    protected static void addClasspathInput(MojoMetadataProvider.Context.Inputs inputs, Path classpathFilePath) {
+        if (!Files.isReadable(classpathFilePath)) {
+            return;
+        }
+
+        try {
+            List<String> quarkusDependencies = Files.readAllLines(classpathFilePath, StandardCharsets.UTF_8);
+            inputs.fileSet("quarkus-dependencies", quarkusDependencies, fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.CLASSPATH));
+        } catch (IOException e) {
+            Log.warn("Unable to add dependencies for " + classpathFilePath, e);
         }
     }
 }
