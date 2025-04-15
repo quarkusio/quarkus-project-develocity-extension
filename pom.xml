@@ -21,9 +21,7 @@
         <maven.compiler.release>17</maven.compiler.release>
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
-        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
-        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
     </properties>
@@ -116,17 +114,6 @@
         </developer>
     </developers>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype-nexus-release</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
     <scm>
         <url>https://github.com/quarkusio/quarkus-project-develocity-extension</url>
         <connection>scm:git:git@github.com:quarkusio/quarkus-project-develocity-extension.git</connection>
@@ -151,20 +138,10 @@
                         <configuration>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
                             <tagNameFormat>@{project.version}</tagNameFormat>
-                            <pushChanges>true</pushChanges>
+
+                            <pushChanges>false</pushChanges>
                             <localCheckout>true</localCheckout>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>${nexus-staging-maven-plugin.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                            <serverId>ossrh</serverId>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                            <keepStagingRepositoryOnCloseRuleFailure>true</keepStagingRepositoryOnCloseRuleFailure>
+                            <remoteTagging>false</remoteTagging>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -196,36 +173,6 @@
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <!--
-                        ## IMPORTANT ##
-                        In your ~/.m2/settings.xml you need to add and edit the following profile:
-                        <profile>
-                            <id>release</id>
-                            <properties>
-                                <gpg.useagent>false</gpg.useagent>
-                                <gpg.executable>/usr/local/Cellar/gnupg@1.4/1.4.23_1/bin/gpg1</gpg.executable> <- use gpg1 on Mac OS X <gpg.homedir>~/.gnupg</gpg.homedir>  <- Update to your own directory <gpg.passphrase>******</gpg.passphrase> <- Add your passphrase </properties>
-                        </profile>
-                         -->
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                                <configuration>
-                                    <gpgArguments>
-                                        <arg>--pinentry-mode</arg>
-                                        <arg>loopback</arg>
-                                    </gpgArguments>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
