@@ -23,8 +23,10 @@ The cache won't be populated otherwise.
 
 You can also get some information about the generation of the cache key with `-Dorg.slf4j.simpleLogger.log.develocity.goal.fingerprint=trace`.
 
-## Releasing
+## Release
 
-```
-./mvnw release:prepare release:perform -Prelease
-```
+To release a new version, follow these steps:
+
+https://github.com/smallrye/smallrye/wiki/Release-Process#releasing
+
+The staging repository is automatically closed. The sync with Maven Central should take ~30 minutes.
