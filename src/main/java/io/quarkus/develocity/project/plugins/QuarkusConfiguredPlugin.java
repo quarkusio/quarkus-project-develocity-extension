@@ -51,6 +51,10 @@ public class QuarkusConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
             dependsOnJavaVersion(inputs);
 
             inputs.properties("skipSourceGeneration", "mode", "properties", "bootstrapId");
+            if (test) {
+                inputs.properties("serializeTestModel");
+            }
+
             addClasspathInput(inputs, Path.of(context.project().getBuild().getDirectory(), "quarkus-prod-dependencies.txt"));
             // for compatibility with older versions but this is deprecated
             inputs.fileSet("quarkus-dependency-checksums", context.project().getBuild().getDirectory(), fs -> fs
