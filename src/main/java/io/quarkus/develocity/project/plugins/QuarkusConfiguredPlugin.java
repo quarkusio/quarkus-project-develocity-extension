@@ -78,7 +78,7 @@ public class QuarkusConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
             }
 
             inputs.ignore("repoSession", "session", "project", "mojoExecution", "buildDir", "finalName", "manifestEntries",
-                    "manifestSections", "ignoredEntries", "appArtifact", "closeBootstrappedApp");
+                    "manifestSections", "ignoredEntries", "appArtifact", "closeBootstrappedApp", "reloadPoms");
         });
 
         context.metadata().nested("repos", c -> c.inputs(inputs -> inputs.properties("id", "url")));
