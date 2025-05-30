@@ -39,7 +39,8 @@ public class SpotlessConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
             // Entities used by Spotless with parameters defined in FormatterFactory
             // we can ignore them as our formatting is consistent throughout the project
             inputs.ignore("java", "python", "scala", "groovy", "javascript", "json", "kotlin", "cpp", "antlr4", "sql",
-                    "typescript", "yaml", "pom", "markdown");
+                    "typescript", "yaml", "pom", "markdown", "css", "gherkin", "go", "m2eEnableForIncrementalBuild",
+                    "protobuf", "rdf", "shell", "spotlessIdeHook", "spotlessIdeHookUseStdIn", "spotlessIdeHookUseStdOut");
         });
 
         context.metadata().nested("licenseHeader",
