@@ -82,16 +82,17 @@ public class KotlinConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
             }
             inputs.fileSet("classpath", fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.COMPILE_CLASSPATH));
             inputs.fileSet("testClasspath", fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.COMPILE_CLASSPATH));
-            inputs.fileSet("sourceDirs", context.project().getCompileSourceRoots(),
-                    fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH)
-                            .lineEndingHandling(LineEndingHandling.NORMALIZE)
-                            .emptyDirectoryHandling(EmptyDirectoryHandling.IGNORE));
             if (test) {
-                inputs.fileSet("defaultSourceDir", context.project().getCompileSourceRoots(),
+                inputs.fileSet("defaultSourceDir", context.project().getTestCompileSourceRoots(),
                         fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH)
                                 .lineEndingHandling(LineEndingHandling.NORMALIZE)
                                 .emptyDirectoryHandling(EmptyDirectoryHandling.IGNORE));
-                inputs.fileSet("defaultSourceDirs", context.project().getCompileSourceRoots(),
+                inputs.fileSet("defaultSourceDirs", context.project().getTestCompileSourceRoots(),
+                        fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH)
+                                .lineEndingHandling(LineEndingHandling.NORMALIZE)
+                                .emptyDirectoryHandling(EmptyDirectoryHandling.IGNORE));
+            } else {
+                inputs.fileSet("sourceDirs", context.project().getCompileSourceRoots(),
                         fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH)
                                 .lineEndingHandling(LineEndingHandling.NORMALIZE)
                                 .emptyDirectoryHandling(EmptyDirectoryHandling.IGNORE));
