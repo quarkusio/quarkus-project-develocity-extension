@@ -48,6 +48,7 @@ public class QuarkusProjectDevelocityConfigurationListener implements Develocity
                     + mavenSession.getRequest().getBaseDirectory());
 
             develocityApi.getBuildScan().getPublishing().onlyIf(context -> false);
+            develocityApi.getBuildScan().getCapture().setResourceUsage(false);
             develocityApi.getBuildCache().getLocal().setEnabled(false);
             develocityApi.getBuildCache().getRemote().setEnabled(false);
 
