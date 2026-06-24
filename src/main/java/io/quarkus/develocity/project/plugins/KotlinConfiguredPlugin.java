@@ -32,7 +32,9 @@ public class KotlinConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                     "correctErrorTypes", "mapDiagnosticLocations", "annotationProcessorArgs", "javacOptions",
                     "moduleName", "testModuleName", "jvmTarget", "scriptTemplates", "myIncremental", "javaParameters",
                     "compilerPlugins", "pluginOptions", "multiPlatform", "apiVersion", "args", "experimentalCoroutines",
-                    "languageVersion", "module", "testModule");
+                    "languageVersion", "module", "testModule",
+                    "generateCompilerRefIndex", "jdkRelease", "kotlinDaemonJvmArgs",
+                    "shouldTrackConfigurationInputs", "includeCompileClasspath");
             inputs.fileSet("classpath", fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.COMPILE_CLASSPATH));
             inputs.fileSet("testClasspath", fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.CLASSPATH));
             inputs.fileSet("sourceDirs", context.project().getCompileSourceRoots(),
@@ -40,7 +42,8 @@ public class KotlinConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                             .lineEndingHandling(LineEndingHandling.NORMALIZE)
                             .emptyDirectoryHandling(EmptyDirectoryHandling.IGNORE));
 
-            inputs.ignore("jdkHome", "session", "mojoExecution", "nowarn", "project", "output", "testOutput");
+            inputs.ignore("jdkHome", "session", "mojoExecution", "nowarn", "project", "output", "testOutput",
+                    "classLoaderCacheTimeoutSeconds", "daemonShutdownDelayMs", "jdkToolchain", "useDaemon");
         });
 
         context.metadata().nested("annotationProcessorPaths",
@@ -76,7 +79,9 @@ public class KotlinConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
 
             inputs.properties("compilerPlugins", "pluginOptions", "multiPlatform", "languageVersion", "apiVersion",
                     "experimentalCoroutines", "args", "jvmTarget", "moduleName", "testModuleName", "scriptTemplates",
-                    "javaParameters", "myIncremental");
+                    "javaParameters", "myIncremental",
+                    "generateCompilerRefIndex", "jdkRelease", "kotlinDaemonJvmArgs",
+                    "shouldTrackConfigurationInputs");
             if (test) {
                 inputs.properties("skip");
             }
@@ -91,6 +96,10 @@ public class KotlinConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                         fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH)
                                 .lineEndingHandling(LineEndingHandling.NORMALIZE)
                                 .emptyDirectoryHandling(EmptyDirectoryHandling.IGNORE));
+                inputs.fileSet("sourceDirs", context.project().getTestCompileSourceRoots(),
+                        fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH)
+                                .lineEndingHandling(LineEndingHandling.NORMALIZE)
+                                .emptyDirectoryHandling(EmptyDirectoryHandling.IGNORE));
             } else {
                 inputs.fileSet("sourceDirs", context.project().getCompileSourceRoots(),
                         fileSet -> fileSet.normalizationStrategy(NormalizationStrategy.RELATIVE_PATH)
@@ -98,7 +107,8 @@ public class KotlinConfiguredPlugin extends SimpleQuarkusConfiguredPlugin {
                                 .emptyDirectoryHandling(EmptyDirectoryHandling.IGNORE));
             }
 
-            inputs.ignore("module", "testModule", "mojoExecution", "nowarn", "project", "jdkHome", "session");
+            inputs.ignore("module", "testModule", "mojoExecution", "nowarn", "project", "jdkHome", "session",
+                    "classLoaderCacheTimeoutSeconds", "daemonShutdownDelayMs", "jdkToolchain", "useDaemon");
         });
 
         context.metadata().localState(l -> l.files("incrementalCachesRoot"));
