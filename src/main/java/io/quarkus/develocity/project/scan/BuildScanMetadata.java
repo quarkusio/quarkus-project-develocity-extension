@@ -86,7 +86,7 @@ public final class BuildScanMetadata {
 
             similarBuildsTags.add(System.getenv("RUNNER_OS"));
 
-            buildScanApi.link("Similar builds", "https://ge.quarkus.io/scans?search.tags="
+            buildScanApi.link("Similar builds", "https://develocity.quarkus.io/scans?search.tags="
                     + URLEncoder.encode(String.join(",", similarBuildsTags), StandardCharsets.UTF_8).replace("+", "%20"));
 
             buildScanApi.buildScanPublished(publishedBuildScan -> {
